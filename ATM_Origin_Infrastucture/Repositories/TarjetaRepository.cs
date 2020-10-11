@@ -17,6 +17,35 @@ namespace ATM_Origin_Infrastucture.Repositories
         {
             _context = context;
         }
+
+        //1)********************************************************************************************************************
+        public async Task<Tarjeta> GetTarjetaByNumber(string number)
+        {
+            return await _context.Tarjeta.FirstOrDefaultAsync(t => t.Numero == number && t.Habilitada == true);
+        }
+        //2)********************************************************************************************************************
+        public async Task<Tarjeta> GetTarjetaByPin(Tarjeta tarjeta)
+        {
+            return await _context.Tarjeta.FirstOrDefaultAsync(t => t.Numero == tarjeta.Numero && t.Pin == tarjeta.Pin && t.Habilitada == true);
+        }
+        //3)********************************************************************************************************************
+        public async Task InsertOperacion(Operaciones operaciones)
+        {
+            _context.Operaciones.Add(operaciones);
+            await _context.SaveChangesAsync();
+        }
+        //4)********************************************************************************************************************
+        public async Task<bool> UpdateTarjeta(Tarjeta tarjeta)
+        {
+            var currentTarjeta = await GetTarjeta(tarjeta.Id);
+            currentTarjeta.Habilitada = tarjeta.Habilitada;
+            currentTarjeta.Balance = tarjeta.Balance;
+            int rows = await _context.SaveChangesAsync();
+            return rows > 0;
+        }
+
+
+
         public async Task<IEnumerable<Tarjeta>> GetTarjetas()
         {
             var listTarjetas = await _context.Tarjeta.ToListAsync();
@@ -31,11 +60,12 @@ namespace ATM_Origin_Infrastucture.Repositories
             return tarjeta;
         }
 
-        public async Task InsertOperacion(Operaciones operaciones)
+        public async Task<bool> DeleteTarjeta(int id)
         {
-            _context.Operaciones.Add(operaciones);
-
-            await _context.SaveChangesAsync();
+            var currentTarjeta = await GetTarjeta(id);
+            _context.Tarjeta.Remove(currentTarjeta);
+            int rows = await _context.SaveChangesAsync();
+            return rows > 0;
         }
     }
 }

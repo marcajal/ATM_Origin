@@ -11,5 +11,6 @@ namespace ATM_Origin.Core.DTOs
         public DateTime FechaVto { get; set; }
         public string Pin { get; set; }
         public decimal Balance { get; set; }
+        public bool Habilitada { get; set; }
     }
 }

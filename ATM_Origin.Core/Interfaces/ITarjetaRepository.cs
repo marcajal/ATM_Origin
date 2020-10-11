@@ -8,8 +8,15 @@ namespace ATM_Origin.Core.Interfaces
 {
     public interface ITarjetaRepository
     {
+        Task<Tarjeta> GetTarjetaByNumber(string number);
+        Task<Tarjeta> GetTarjetaByPin(Tarjeta tarjeta);
+        Task InsertOperacion(Operaciones operaciones);
+        Task<bool> UpdateTarjeta(Tarjeta tarjeta);
+
+
+
         Task<IEnumerable<Tarjeta>> GetTarjetas();
         Task<Tarjeta> GetTarjeta(int id);
-        Task InsertOperacion(Operaciones operaciones);
+        Task<bool> DeleteTarjeta(int id);
     }
 }

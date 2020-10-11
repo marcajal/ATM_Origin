@@ -15,6 +15,8 @@ namespace ATM_Origin.Core.Entities
         public DateTime FechaVto { get; set; }
         public string Pin { get; set; }
         public decimal Balance { get; set; }
+        public bool Habilitada { get; set; }
+        
 
         public virtual ICollection<Operaciones> Operaciones { get; set; }
     }

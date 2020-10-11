@@ -31,6 +31,8 @@ namespace ATM_Origin_Infrastucture.Configurations
                 .HasMaxLength(5)
                 .IsUnicode(false)
                 .IsFixedLength();
+
+            builder.Property(e => e.Habilitada).HasColumnType("bit");
         }
     }
 }

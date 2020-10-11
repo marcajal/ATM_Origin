@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using ATM_Origin.Core.Interfaces;
 using ATM_Origin_Infrastucture.Data;
+using ATM_Origin_Infrastucture.Filters;
 using ATM_Origin_Infrastucture.Repositories;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -36,13 +38,29 @@ namespace ATM_OriginAPI
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 }
-            );
+            )
+            .ConfigureApiBehaviorOptions(options => {
+                //options.SuppressModelStateInvalidFilter = true;
+
+
+            });
 
             services.AddDbContext<ATM_OriginDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ATM_OriginDB"))
                 );
 
             services.AddTransient<ITarjetaRepository, TarjetaRepository>();
+
+            //FILTRO GLOBAL
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<ValidationFilter>();
+            })
+            .AddFluentValidation(options =>
+            {
+                options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

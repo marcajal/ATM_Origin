@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ATM_Origin.Api.Responses;
 using ATM_Origin.Core.DTOs;
 using ATM_Origin.Core.Entities;
 using ATM_Origin.Core.Interfaces;
@@ -24,12 +25,53 @@ namespace ATM_Origin.Api.Controllers
             _mapper = mapper;
         }
 
+        //1)********************************************************************************************************************
+        [HttpGet("number/{number}")]
+        public async Task<IActionResult> GetTarjetaByNumber(string number)
+        {
+            var tarjeta = await _tarjetaRepository.GetTarjetaByNumber(number);
+            var tarjetaDto = _mapper.Map<TarjetaDto>(tarjeta);
+            //var response = new ApiResponse<TarjetaDto>(tarjetaDto);
+            return Ok(tarjetaDto);
+        }
+        //2)********************************************************************************************************************
+        [HttpPost]
+        public async Task<IActionResult> GetTarjetaByPin(TarjetaDto tarjetaDto)
+        {
+            var tarjeta = _mapper.Map<Tarjeta>(tarjetaDto);
+            var response = await _tarjetaRepository.GetTarjetaByPin(tarjeta);
+            //var response2 = new ApiResponse<TarjetaDto>(tarjetaDto);
+            return Ok(response);
+        }
+        //3)********************************************************************************************************************
+        [HttpPost]
+        public async Task<IActionResult> InsertOperacion(OperacionesDto operacionesDto)
+        {
+            var operaciones = _mapper.Map<Operaciones>(operacionesDto);
+            await _tarjetaRepository.InsertOperacion(operaciones);
+            return Ok(operaciones);
+        }
+        //4)********************************************************************************************************************
+        [HttpPut]
+        public async Task<IActionResult> UpdateTarjeta(int id, TarjetaDto tarjetaDto)
+        {
+            var tarjeta = _mapper.Map<Tarjeta>(tarjetaDto);
+            tarjeta.Id = id;
+            var result = await _tarjetaRepository.UpdateTarjeta(tarjeta);
+            var response = new ApiResponse<bool>(result);
+            return Ok(response);
+        }
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> GetTarjetas()
         {
             var tarjetas = await _tarjetaRepository.GetTarjetas();
             var tarjetasDto = _mapper.Map<IEnumerable<TarjetaDto>>(tarjetas);
-            return Ok(tarjetasDto);
+            var response = new ApiResponse<IEnumerable<TarjetaDto>>(tarjetasDto);
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -37,25 +79,15 @@ namespace ATM_Origin.Api.Controllers
         {
             var tarjeta = await _tarjetaRepository.GetTarjeta(id);
             var tarjetaDto = _mapper.Map<TarjetaDto>(tarjeta);
-            return Ok(tarjetaDto);
-            
+            var response = new ApiResponse<TarjetaDto>(tarjetaDto);
+            return Ok(response);   
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Tarjeta(OperacionesDto operacionesDto)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            //var operaciones =  new Operaciones 
-            //{
-            //    TarjetaId = operacionesDto.TarjetaId,
-            //    Balance = operacionesDto.Balance,
-            //    CodigoOperacion = operacionesDto.CodigoOperacion,
-            //    Fecha = operacionesDto.Fecha,
-                
-            //};
-
-            var operaciones = _mapper.Map<Operaciones>(operacionesDto);
-            await _tarjetaRepository.InsertOperacion(operaciones);
-            return Ok(operaciones);
+            var result = await _tarjetaRepository.DeleteTarjeta(id);
+            return Ok(result);
         }
     }
 }
