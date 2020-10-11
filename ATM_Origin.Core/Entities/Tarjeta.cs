@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace ATM_Origin.Core.Entities
 {
-    public partial class Tarjeta
+    public partial class Tarjeta : BaseEntity
     {
         public Tarjeta()
         {
             Operaciones = new HashSet<Operaciones>();
         }
 
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string Numero { get; set; }
         public DateTime FechaVto { get; set; }
         public string Pin { get; set; }

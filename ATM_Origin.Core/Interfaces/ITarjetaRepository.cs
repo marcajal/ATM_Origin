@@ -1,4 +1,5 @@
 ﻿using ATM_Origin.Core.Entities;
+using ATM_Origin.Core.RequestFilters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace ATM_Origin.Core.Interfaces
     public interface ITarjetaRepository
     {
         Task<Tarjeta> GetTarjetaByNumber(string number);
-        Task<Tarjeta> GetTarjetaByPin(Tarjeta tarjeta);
+        Task<Tarjeta> GetTarjetaByPin(TarjetaRequestFilter tarjeta);
         Task InsertOperacion(Operaciones operaciones);
         Task<bool> UpdateTarjeta(Tarjeta tarjeta);
 

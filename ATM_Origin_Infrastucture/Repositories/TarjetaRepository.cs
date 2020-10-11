@@ -1,5 +1,6 @@
 ﻿using ATM_Origin.Core.Entities;
 using ATM_Origin.Core.Interfaces;
+using ATM_Origin.Core.RequestFilters;
 using ATM_Origin_Infrastucture.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace ATM_Origin_Infrastucture.Repositories
             return await _context.Tarjeta.FirstOrDefaultAsync(t => t.Numero == number && t.Habilitada == true);
         }
         //2)********************************************************************************************************************
-        public async Task<Tarjeta> GetTarjetaByPin(Tarjeta tarjeta)
+        public async Task<Tarjeta> GetTarjetaByPin(TarjetaRequestFilter tarjeta)
         {
             return await _context.Tarjeta.FirstOrDefaultAsync(t => t.Numero == tarjeta.Numero && t.Pin == tarjeta.Pin && t.Habilitada == true);
         }

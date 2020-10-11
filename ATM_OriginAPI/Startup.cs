@@ -35,7 +35,11 @@ namespace ATM_OriginAPI
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddControllers().AddNewtonsoftJson(options =>
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<GlobalExceptionFilter>();
+            })
+            .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 }
@@ -51,6 +55,8 @@ namespace ATM_OriginAPI
                 );
             services.AddTransient<ITarjetaService, TarjetaService>();
             services.AddTransient<ITarjetaRepository, TarjetaRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             //FILTRO GLOBAL
             services.AddMvc(options =>

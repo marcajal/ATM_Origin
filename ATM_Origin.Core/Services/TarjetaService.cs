@@ -1,5 +1,7 @@
 ﻿using ATM_Origin.Core.Entities;
+using ATM_Origin.Core.Exceptions;
 using ATM_Origin.Core.Interfaces;
+using ATM_Origin.Core.RequestFilters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,20 +12,33 @@ namespace ATM_Origin.Core.Services
    
     public class TarjetaService : ITarjetaService
     {
+        //VALIDATE
         private readonly ITarjetaRepository _tarjetaRepository;
-        public TarjetaService(ITarjetaRepository tarjetaRepository)
+        //private readonly IUnitOfWork _unitOfWork;
+        //private readonly IRepository<Tarjeta> _tarjetaRepositoryGeneric;
+        public TarjetaService(ITarjetaRepository tarjetaRepository, IRepository<Tarjeta> tarjetaRepositoryGeneric, IUnitOfWork unitOfWork)
         {
             _tarjetaRepository = tarjetaRepository;
+            //_tarjetaRepositoryGeneric = tarjetaRepositoryGeneric;
+            //_unitOfWork = unitOfWork;
         }
         public async Task<Tarjeta> GetTarjetaByNumber(string number)
         {
             return await _tarjetaRepository.GetTarjetaByNumber(number);
+            //return await _unitOfWork.tarjetaRepository.GetById(1);
+
         }
 
 
-        public async Task<Tarjeta> GetTarjetaByPin(Tarjeta tarjeta)
+        public async Task<Tarjeta> GetTarjetaByPin(TarjetaRequestFilter tarjeta)
         {
-            return await _tarjetaRepository.GetTarjetaByPin(tarjeta);
+            var response = await _tarjetaRepository.GetTarjetaByPin(tarjeta);
+            if(response == null)
+            {
+                throw new BusinessException("Ingreso Incorrecto de PIN"); 
+            }
+
+            return response;
         }
 
         public async Task InsertOperacion(Operaciones operaciones)

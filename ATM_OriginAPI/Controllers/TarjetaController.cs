@@ -6,6 +6,7 @@ using ATM_Origin.Api.Responses;
 using ATM_Origin.Core.DTOs;
 using ATM_Origin.Core.Entities;
 using ATM_Origin.Core.Interfaces;
+using ATM_Origin.Core.RequestFilters;
 using ATM_Origin_Infrastucture.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -35,10 +36,10 @@ namespace ATM_Origin.Api.Controllers
             return Ok(tarjetaDto);
         }
         //2)********************************************************************************************************************
-        [HttpPost]
-        public async Task<IActionResult> GetTarjetaByPin(TarjetaDto tarjetaDto)
+        [HttpPost("security")]
+        public async Task<IActionResult> GetTarjetaByPin(TarjetaRequestFilter tarjeta)
         {
-            var tarjeta = _mapper.Map<Tarjeta>(tarjetaDto);
+            //var tarjeta = _mapper.Map<Tarjeta>(tarjetaDto);
             var response = await _tarjetaService.GetTarjetaByPin(tarjeta);
             //var response2 = new ApiResponse<TarjetaDto>(tarjetaDto);
             return Ok(response);
@@ -57,8 +58,8 @@ namespace ATM_Origin.Api.Controllers
         {
             var tarjeta = _mapper.Map<Tarjeta>(tarjetaDto);
             tarjeta.Id = id;
-            var result = await _tarjetaService.UpdateTarjeta(tarjeta);
-            var response = new ApiResponse<bool>(result);
+            var response = await _tarjetaService.UpdateTarjeta(tarjeta);
+            //var response = new ApiResponse<bool>(result);
             return Ok(response);
         }
 
@@ -70,8 +71,8 @@ namespace ATM_Origin.Api.Controllers
         {
             var tarjetas = await _tarjetaService.GetTarjetas();
             var tarjetasDto = _mapper.Map<IEnumerable<TarjetaDto>>(tarjetas);
-            var response = new ApiResponse<IEnumerable<TarjetaDto>>(tarjetasDto);
-            return Ok(response);
+            //var response = new ApiResponse<IEnumerable<TarjetaDto>>(tarjetasDto);
+            return Ok(tarjetasDto);
         }
 
         [HttpGet("{id}")]
@@ -79,8 +80,8 @@ namespace ATM_Origin.Api.Controllers
         {
             var tarjeta = await _tarjetaService.GetTarjeta(id);
             var tarjetaDto = _mapper.Map<TarjetaDto>(tarjeta);
-            var response = new ApiResponse<TarjetaDto>(tarjetaDto);
-            return Ok(response);   
+            //var response = new ApiResponse<TarjetaDto>(tarjetaDto);
+            return Ok(tarjetaDto);   
         }
 
         [HttpDelete("{id}")]
