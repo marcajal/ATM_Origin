@@ -17,11 +17,11 @@ namespace ATM_Origin.Api.Controllers
     [ApiController]
     public class TarjetaController : ControllerBase
     {
-        private readonly ITarjetaRepository _tarjetaRepository;
+        private readonly ITarjetaService _tarjetaService;
         private readonly IMapper _mapper;
-        public TarjetaController(ITarjetaRepository tarjetaRepository, IMapper mapper)
+        public TarjetaController(ITarjetaService tarjetaService, IMapper mapper)
         {
-            _tarjetaRepository = tarjetaRepository;
+            _tarjetaService = tarjetaService;
             _mapper = mapper;
         }
 
@@ -29,7 +29,7 @@ namespace ATM_Origin.Api.Controllers
         [HttpGet("number/{number}")]
         public async Task<IActionResult> GetTarjetaByNumber(string number)
         {
-            var tarjeta = await _tarjetaRepository.GetTarjetaByNumber(number);
+            var tarjeta = await _tarjetaService.GetTarjetaByNumber(number);
             var tarjetaDto = _mapper.Map<TarjetaDto>(tarjeta);
             //var response = new ApiResponse<TarjetaDto>(tarjetaDto);
             return Ok(tarjetaDto);
@@ -39,7 +39,7 @@ namespace ATM_Origin.Api.Controllers
         public async Task<IActionResult> GetTarjetaByPin(TarjetaDto tarjetaDto)
         {
             var tarjeta = _mapper.Map<Tarjeta>(tarjetaDto);
-            var response = await _tarjetaRepository.GetTarjetaByPin(tarjeta);
+            var response = await _tarjetaService.GetTarjetaByPin(tarjeta);
             //var response2 = new ApiResponse<TarjetaDto>(tarjetaDto);
             return Ok(response);
         }
@@ -48,7 +48,7 @@ namespace ATM_Origin.Api.Controllers
         public async Task<IActionResult> InsertOperacion(OperacionesDto operacionesDto)
         {
             var operaciones = _mapper.Map<Operaciones>(operacionesDto);
-            await _tarjetaRepository.InsertOperacion(operaciones);
+            await _tarjetaService.InsertOperacion(operaciones);
             return Ok(operaciones);
         }
         //4)********************************************************************************************************************
@@ -57,7 +57,7 @@ namespace ATM_Origin.Api.Controllers
         {
             var tarjeta = _mapper.Map<Tarjeta>(tarjetaDto);
             tarjeta.Id = id;
-            var result = await _tarjetaRepository.UpdateTarjeta(tarjeta);
+            var result = await _tarjetaService.UpdateTarjeta(tarjeta);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }
@@ -68,7 +68,7 @@ namespace ATM_Origin.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTarjetas()
         {
-            var tarjetas = await _tarjetaRepository.GetTarjetas();
+            var tarjetas = await _tarjetaService.GetTarjetas();
             var tarjetasDto = _mapper.Map<IEnumerable<TarjetaDto>>(tarjetas);
             var response = new ApiResponse<IEnumerable<TarjetaDto>>(tarjetasDto);
             return Ok(response);
@@ -77,7 +77,7 @@ namespace ATM_Origin.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTarjeta(int id)
         {
-            var tarjeta = await _tarjetaRepository.GetTarjeta(id);
+            var tarjeta = await _tarjetaService.GetTarjeta(id);
             var tarjetaDto = _mapper.Map<TarjetaDto>(tarjeta);
             var response = new ApiResponse<TarjetaDto>(tarjetaDto);
             return Ok(response);   
@@ -86,7 +86,7 @@ namespace ATM_Origin.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _tarjetaRepository.DeleteTarjeta(id);
+            var result = await _tarjetaService.DeleteTarjeta(id);
             return Ok(result);
         }
     }

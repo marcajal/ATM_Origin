@@ -2,10 +2,7 @@
 using ATM_Origin.Core.Interfaces;
 using ATM_Origin_Infrastucture.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ATM_Origin_Infrastucture.Repositories

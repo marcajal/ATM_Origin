@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ATM_Origin.Core.Interfaces;
+using ATM_Origin.Core.Services;
 using ATM_Origin_Infrastucture.Data;
 using ATM_Origin_Infrastucture.Filters;
 using ATM_Origin_Infrastucture.Repositories;
@@ -48,7 +49,7 @@ namespace ATM_OriginAPI
             services.AddDbContext<ATM_OriginDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ATM_OriginDB"))
                 );
-
+            services.AddTransient<ITarjetaService, TarjetaService>();
             services.AddTransient<ITarjetaRepository, TarjetaRepository>();
 
             //FILTRO GLOBAL

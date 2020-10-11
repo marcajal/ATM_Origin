@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace ATM_Origin.Core.Interfaces
 {
-    public interface ITarjetaRepository
+    public interface ITarjetaService
     {
+        Task<bool> DeleteTarjeta(int id);
+        Task<Tarjeta> GetTarjeta(int id);
         Task<Tarjeta> GetTarjetaByNumber(string number);
         Task<Tarjeta> GetTarjetaByPin(Tarjeta tarjeta);
+        Task<IEnumerable<Tarjeta>> GetTarjetas();
         Task InsertOperacion(Operaciones operaciones);
         Task<bool> UpdateTarjeta(Tarjeta tarjeta);
-
-        Task<IEnumerable<Tarjeta>> GetTarjetas();
-        Task<Tarjeta> GetTarjeta(int id);
-        Task<bool> DeleteTarjeta(int id);
     }
 }
