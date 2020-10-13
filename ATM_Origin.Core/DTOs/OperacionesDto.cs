@@ -8,7 +8,7 @@ namespace ATM_Origin.Core.DTOs
     {
         public int Id { get; set; }
         public int TarjetaId { get; set; }
-        public DateTime Fecha { get; set; }
+        public DateTime? Fecha { get; set; }
         public string CodigoOperacion { get; set; }
         public decimal? Balance { get; set; }
 

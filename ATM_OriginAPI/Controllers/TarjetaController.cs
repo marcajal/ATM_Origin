@@ -55,10 +55,10 @@ namespace ATM_Origin.Api.Controllers
         }
         //4)********************************************************************************************************************
         [HttpPut]
-        public async Task<IActionResult> UpdateTarjeta(int id, TarjetaDto tarjetaDto)
+        public async Task<IActionResult> UpdateTarjeta(TarjetaDto tarjetaDto)
         {
             var tarjeta = _mapper.Map<Tarjeta>(tarjetaDto);
-            tarjeta.Id = id;
+            //tarjeta.Id = id;
             var response = await _tarjetaService.UpdateTarjeta(tarjeta);
             //var response = new ApiResponse<bool>(result);
             return Ok(response);

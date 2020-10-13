@@ -44,6 +44,7 @@ namespace ATM_Origin.Core.Services
 
         public async Task InsertOperacion(Operaciones operaciones)
         {
+            operaciones.Fecha = DateTime.Now;
             await _tarjetaRepository.InsertOperacion(operaciones);
         }
 
