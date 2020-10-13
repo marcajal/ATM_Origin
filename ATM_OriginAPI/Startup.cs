@@ -33,6 +33,12 @@ namespace ATM_OriginAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //SE CONFIGURA AddCors POR UN TEMA DE CONFLICTO DE PUERTOS LOCAL HOST CON EL PROYECTO FRONT END
+            services.AddCors(option => option.AddPolicy("MyBlogPolicy", builder => {
+                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            }));
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddControllers(options =>
@@ -79,6 +85,8 @@ namespace ATM_OriginAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("MyBlogPolicy");
 
             app.UseRouting();
 

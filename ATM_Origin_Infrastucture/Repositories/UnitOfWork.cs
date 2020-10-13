@@ -17,7 +17,7 @@ namespace ATM_Origin_Infrastucture.Repositories
         {
             _context = context;
         }
-        public IRepository<Tarjeta> tarjetaRepository => _tarjetaRepository ?? new BaseRepository<Tarjeta>(_context);
+        public IRepository<Tarjeta> TarjetaRepository => _tarjetaRepository ?? new BaseRepository<Tarjeta>(_context);
 
         public void Dispose()
         {

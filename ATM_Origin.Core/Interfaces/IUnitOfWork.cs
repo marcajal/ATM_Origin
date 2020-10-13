@@ -8,7 +8,7 @@ namespace ATM_Origin.Core.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Tarjeta> tarjetaRepository { get; }
+        IRepository<Tarjeta> TarjetaRepository { get; }
         void SaveChanges();
         Task SaveChangesAsync();
     }

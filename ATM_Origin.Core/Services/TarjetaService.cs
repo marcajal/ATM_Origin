@@ -4,6 +4,7 @@ using ATM_Origin.Core.Interfaces;
 using ATM_Origin.Core.RequestFilters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,10 +34,10 @@ namespace ATM_Origin.Core.Services
         public async Task<Tarjeta> GetTarjetaByPin(TarjetaRequestFilter tarjeta)
         {
             var response = await _tarjetaRepository.GetTarjetaByPin(tarjeta);
-            if(response == null)
-            {
-                throw new BusinessException("Ingreso Incorrecto de PIN"); 
-            }
+            //if(response == null)
+            //{
+            //    throw new BusinessException("Ingreso Incorrecto de PIN"); 
+            //}
 
             return response;
         }
@@ -57,7 +58,9 @@ namespace ATM_Origin.Core.Services
         }
         public async Task<IEnumerable<Tarjeta>> GetTarjetas()
         {
-            return await _tarjetaRepository.GetTarjetas();
+            var response = await _tarjetaRepository.GetTarjetas();
+            //response = response.Where(t => t.FechaVto.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
+            return response;
         }
         public async Task<bool> DeleteTarjeta(int id)
         {

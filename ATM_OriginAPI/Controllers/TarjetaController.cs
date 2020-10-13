@@ -11,6 +11,7 @@ using ATM_Origin_Infrastucture.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http.Cors;
 
 namespace ATM_Origin.Api.Controllers
 {
