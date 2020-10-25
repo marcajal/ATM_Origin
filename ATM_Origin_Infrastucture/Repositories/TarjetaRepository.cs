@@ -44,9 +44,9 @@ namespace ATM_Origin_Infrastucture.Repositories
 
 
 
-        public async Task<IEnumerable<Tarjeta>> GetTarjetas()
+        public IEnumerable<Tarjeta> GetTarjetas()
         {
-            var listTarjetas = await _context.Tarjeta.ToListAsync();
+            var listTarjetas = _context.Tarjeta;
             
             return listTarjetas;
         }

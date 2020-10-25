@@ -14,7 +14,7 @@ namespace ATM_Origin.Core.Interfaces
         Task InsertOperacion(Operaciones operaciones);
         Task<bool> UpdateTarjeta(Tarjeta tarjeta);
 
-        Task<IEnumerable<Tarjeta>> GetTarjetas();
+        IEnumerable<Tarjeta> GetTarjetas();
         Task<Tarjeta> GetTarjeta(int id);
         Task<bool> DeleteTarjeta(int id);
     }

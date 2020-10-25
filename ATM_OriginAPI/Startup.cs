@@ -1,23 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ATM_Origin.Core.CustonEntities;
 using ATM_Origin.Core.Interfaces;
 using ATM_Origin.Core.Services;
+using ATM_Origin_Infrastucture;
 using ATM_Origin_Infrastucture.Data;
 using ATM_Origin_Infrastucture.Filters;
+using ATM_Origin_Infrastucture.Interfaces;
 using ATM_Origin_Infrastucture.Repositories;
 using AutoMapper;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Text.Unicode;
 
 namespace ATM_OriginAPI
 {
@@ -48,6 +53,7 @@ namespace ATM_OriginAPI
             .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                 }
             )
             .ConfigureApiBehaviorOptions(options => {
@@ -56,6 +62,8 @@ namespace ATM_OriginAPI
 
             });
 
+
+            services.Configure<PaginationOptions>(Configuration.GetSection("Pagination")); 
             services.AddDbContext<ATM_OriginDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ATM_OriginDB"))
                 );
@@ -63,6 +71,39 @@ namespace ATM_OriginAPI
             services.AddTransient<ITarjetaRepository, TarjetaRepository>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IUriService>(provider =>
+            {
+                var accesor = provider.GetRequiredService<IHttpContextAccessor>();
+                var request = accesor.HttpContext.Request;
+                var absoluteUrl = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriService(absoluteUrl);
+            });
+
+            services.AddSwaggerGen(doc =>
+            {
+                doc.SwaggerDoc("v1", new OpenApiInfo {Title ="ATM_Origin_API", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                doc.IncludeXmlComments(xmlPath);
+            });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Authentication:Issuer"],
+                    ValidAudience = Configuration["Authentication:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:SecretKey"]))
+                };
+            });
 
             //FILTRO GLOBAL
             services.AddMvc(options =>
@@ -87,10 +128,19 @@ namespace ATM_OriginAPI
             app.UseHttpsRedirection();
 
             app.UseCors("MyBlogPolicy");
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(options => 
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json","Origin ATM API");
+                options.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {

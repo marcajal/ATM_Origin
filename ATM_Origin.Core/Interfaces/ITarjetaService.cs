@@ -1,4 +1,5 @@
-﻿using ATM_Origin.Core.Entities;
+﻿using ATM_Origin.Core.CustonEntities;
+using ATM_Origin.Core.Entities;
 using ATM_Origin.Core.RequestFilters;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace ATM_Origin.Core.Interfaces
         Task<Tarjeta> GetTarjeta(int id);
         Task<Tarjeta> GetTarjetaByNumber(string number);
         Task<Tarjeta> GetTarjetaByPin(TarjetaRequestFilter tarjeta);
-        Task<IEnumerable<Tarjeta>> GetTarjetas();
+        PagedList<Tarjeta> GetTarjetas(TarjetaRequestFilter filters);
         Task InsertOperacion(Operaciones operaciones);
         Task<bool> UpdateTarjeta(Tarjeta tarjeta);
     }
